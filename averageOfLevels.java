@@ -25,7 +25,8 @@ public class Main
                 System.out.println("size="+arr.size());
                 System.out.println(arr.size()>=levels+1);
                 if (arr.size()>=levels+1) {
-                    arr.add(((double)(root.left.val+root.right.val)/2+arr.get(levels))/2);
+                    //arr.add(((double)(root.left.val+root.right.val)/2+arr.get(levels))/2);
+                    arr.set(levels,((double)(root.left.val+root.right.val)/2+arr.get(levels))/2);
                 } else {
                     arr.add((double)(root.left.val+root.right.val)/2);
                 }
@@ -37,6 +38,7 @@ public class Main
             levels++;
             recur(root.left);
             recur(root.right);
+            levels--;
         }
     }
     public static class TreeNode {
