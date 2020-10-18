@@ -1,56 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 import java.util.*; 
-public class Main
-{
-    public static List<Double> arr = new ArrayList<Double>();
-    public static int levels=1;
-	public static void main(String[] args) {
-		System.out.println("Hello World");
-		//TreeNode left_right = new TreeNode(11);
-		TreeNode left_right = null;
-		TreeNode left_left = new TreeNode(10);
-		TreeNode right_left = new TreeNode(15);
-		TreeNode right_right = new TreeNode(7);
-		TreeNode left = new TreeNode(9, left_left, left_right);
-		TreeNode right = new TreeNode(20, right_left, right_right);
-		TreeNode root = new TreeNode(3, left, right);
-		arr.add((double)root.val);
-		recur(root);
-		System.out.println(arr);
-	}
-	public static void recur(TreeNode root) {
-	    
-        if (root!=null) {
-            if (root.left!=null && root.right!=null) {
-                System.out.println("levels="+levels);
-                System.out.println("size="+arr.size());
-                System.out.println(arr.size()>=levels+1);
-                if (arr.size()>=levels+1) {
-                    //arr.add(((double)(root.left.val+root.right.val)/2+arr.get(levels))/2);
-                    arr.set(levels,((double)(root.left.val+root.right.val)/2+arr.get(levels))/2);
-                } else {
-                    arr.add((double)(root.left.val+root.right.val)/2);
-                }
-            } else if (root.left!=null && root.right==null) {
-                arr.add((double)(root.left.val));
-            } else if (root.left==null && root.right!=null) {
-                arr.add((double)(root.right.val));
-            }
+class Solution {
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> arr = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
+        recur(root,0.0,0,arr,counts);
+        for (int i=0;i<arr.size();i++) {
+            arr.set(i,(arr.get(i)/counts.get(i)));
+        }
+        return arr;
+    }
+    public static void recur(TreeNode root, double ave, int levels, List<Double> arr, List<Integer> counts) {
+        if (levels==0) {
+            arr.add((double)root.val);
+            counts.add(1);
             levels++;
-            recur(root.left);
-            recur(root.right);
-            levels--;
+        }
+        if (root!=null) {
+            ave =0.0;
+            int n=0;
+            if (root.left!=null && root.right!=null) {
+                ave = (1.0*root.left.val+1.0*root.right.val);
+                n=2;
+            } else if (root.left!=null && root.right==null) {
+                ave = (1.0*root.left.val);
+                n=1;
+            } else if (root.left==null && root.right!=null) {
+                ave = (1.0*root.right.val);
+                n=1;
+            }
+            if (root.left!=null || root.right!=null) {
+                if (arr.size()>=levels+1) {
+                    arr.set(levels,(ave+arr.get(levels)));
+                    counts.set(levels, counts.get(levels) +n);
+                } else {
+                    arr.add(ave);
+                    counts.add(n);
+                }
+            }
+            
+            levels++;
+            recur(root.left, ave, levels, arr, counts);
+            recur(root.right, ave, levels, arr,counts);
         }
     }
-    public static class TreeNode {
-      int val;
-      TreeNode left;
-      TreeNode right;
-      TreeNode() {}
-      TreeNode(int val) { this.val = val; }
-      TreeNode(int val, TreeNode left, TreeNode right) {
-          this.val = val;
-          this.left = left;
-          this.right = right;
-      }
-  }
 }
